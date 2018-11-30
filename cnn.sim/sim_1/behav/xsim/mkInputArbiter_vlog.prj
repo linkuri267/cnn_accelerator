@@ -1,0 +1,10 @@
+# compile verilog/system verilog design source files
+verilog xil_defaultlib  --include "../../../../cnn.srcs/sources_1/imports/build" --include "../../../../../lab8_noc/lab8_noc.srcs/sources_1/imports/build" --include "../../../../cnn.srcs/sources_1/new" \
+"../../../../cnn.srcs/sources_1/imports/build/module_gen_grant_carry.v" \
+"../../../../cnn.srcs/sources_1/imports/build/mkInputArbiter.v" \
+
+# compile glbl module
+verilog xil_defaultlib "glbl.v"
+
+# Do not sort compile order
+nosort

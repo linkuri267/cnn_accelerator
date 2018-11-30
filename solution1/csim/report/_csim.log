@@ -1,0 +1,10 @@
+INFO: [SIM 2] *************** CSIM start ***************
+INFO: [SIM 4] CSIM will launch GCC as the compiler.
+   Compiling ../../../conv_layer.cpp in debug mode
+csim.mk:81: recipe for target 'obj/conv_layer.o' failed
+../../../conv_layer.cpp:7:4: error: expected unqualified-id before ‘[’ token
+ int[MAP_SIZE/FILTER_SIZE][MAP_SIZE/FILTER_SIZE] conv(int filter_c [FILTER_SIZE][FILTER_SIZE], int map [MAP_SIZE][MAP_SIZE]){
+    ^
+make: *** [obj/conv_layer.o] Error 1
+ERR: [SIM 100] 'csim_design' failed: compilation error(s).
+INFO: [SIM 3] *************** CSIM finish ***************

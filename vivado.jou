@@ -1,0 +1,104 @@
+#-----------------------------------------------------------
+# Vivado v2018.2 (64-bit)
+# SW Build 2258646 on Thu Jun 14 20:02:38 MDT 2018
+# IP Build 2256618 on Thu Jun 14 22:10:49 MDT 2018
+# Start of session at: Thu Nov 29 16:05:51 2018
+# Process ID: 9142
+# Current directory: /home/linkuri267/cnn
+# Command line: vivado
+# Log file: /home/linkuri267/cnn/vivado.log
+# Journal file: /home/linkuri267/cnn/vivado.jou
+#-----------------------------------------------------------
+start_gui
+open_project /home/linkuri267/cnn/cnn.xpr
+update_compile_order -fileset sources_1
+close [ open /home/linkuri267/cnn/cnn.srcs/sources_1/new/relu.v w ]
+add_files /home/linkuri267/cnn/cnn.srcs/sources_1/new/relu.v
+update_compile_order -fileset sources_1
+set_property top CONNECT_testbench_sample [get_filesets sim_1]
+set_property top_lib xil_defaultlib [get_filesets sim_1]
+update_ip_catalog
+update_compile_order -fileset sim_1
+launch_simulation
+launch_simulation
+launch_simulation
+update_compile_order -fileset sim_1
+update_compile_order -fileset sim_1
+launch_simulation
+open_wave_config /home/linkuri267/cnn/conv_layer_tb_behav.wcfg
+source mkInputArbiter.tcl
+set_property top CONNECT_testbench_sample [get_filesets sim_1]
+set_property top_lib xil_defaultlib [get_filesets sim_1]
+update_ip_catalog
+launch_simulation
+open_wave_config /home/linkuri267/cnn/conv_layer_tb_behav.wcfg
+source CONNECT_testbench_sample.tcl
+close_sim
+launch_simulation
+open_wave_config /home/linkuri267/cnn/conv_layer_tb_behav.wcfg
+source CONNECT_testbench_sample.tcl
+save_wave_config {/home/linkuri267/cnn/conv_layer_tb_behav.wcfg}
+close_sim
+launch_simulation
+open_wave_config /home/linkuri267/cnn/conv_layer_tb_behav.wcfg
+source CONNECT_testbench_sample.tcl
+create_wave_config
+close_sim
+launch_simulation
+open_wave_config /home/linkuri267/cnn/conv_layer_tb_behav.wcfg
+source CONNECT_testbench_sample.tcl
+save_wave_config {/home/linkuri267/cnn/conv_layer_tb_behav.wcfg}
+close_sim
+launch_simulation
+open_wave_config /home/linkuri267/cnn/conv_layer_tb_behav.wcfg
+source CONNECT_testbench_sample.tcl
+save_wave_config {/home/linkuri267/cnn/conv_layer_tb_behav.wcfg}
+close_sim
+launch_simulation
+open_wave_config /home/linkuri267/cnn/conv_layer_tb_behav.wcfg
+source CONNECT_testbench_sample.tcl
+close_sim
+launch_simulation
+open_wave_config /home/linkuri267/cnn/conv_layer_tb_behav.wcfg
+source CONNECT_testbench_sample.tcl
+save_wave_config {/home/linkuri267/cnn/conv_layer_tb_behav.wcfg}
+close_sim
+launch_simulation
+open_wave_config /home/linkuri267/cnn/conv_layer_tb_behav.wcfg
+source CONNECT_testbench_sample.tcl
+close_sim
+launch_simulation
+open_wave_config /home/linkuri267/cnn/conv_layer_tb_behav.wcfg
+source CONNECT_testbench_sample.tcl
+close_sim
+launch_simulation
+open_wave_config /home/linkuri267/cnn/conv_layer_tb_behav.wcfg
+source CONNECT_testbench_sample.tcl
+save_wave_config {/home/linkuri267/cnn/conv_layer_tb_behav.wcfg}
+close_sim
+launch_simulation
+open_wave_config /home/linkuri267/cnn/conv_layer_tb_behav.wcfg
+source CONNECT_testbench_sample.tcl
+close_sim
+launch_simulation
+open_wave_config /home/linkuri267/cnn/conv_layer_tb_behav.wcfg
+source CONNECT_testbench_sample.tcl
+save_wave_config {/home/linkuri267/cnn/conv_layer_tb_behav.wcfg}
+close_sim
+launch_simulation
+open_wave_config /home/linkuri267/cnn/conv_layer_tb_behav.wcfg
+source CONNECT_testbench_sample.tcl
+save_wave_config {/home/linkuri267/cnn/conv_layer_tb_behav.wcfg}
+update_files -from_files /home/linkuri267/cnn/software_test/source.mem -to_files /home/linkuri267/cnn/cnn.srcs/sources_1/imports/software_test/source.mem -filesets [get_filesets *]
+export_ip_user_files -of_objects  [get_files /home/linkuri267/cnn/cnn.srcs/sources_1/imports/software_test/source.mem] -no_script -reset -force -quiet
+remove_files  /home/linkuri267/cnn/cnn.srcs/sources_1/imports/software_test/source.mem
+add_files -norecurse -scan_for_includes /home/linkuri267/cnn/software_test/source.mem
+import_files -norecurse /home/linkuri267/cnn/software_test/source.mem
+close_sim
+launch_simulation
+open_wave_config /home/linkuri267/cnn/conv_layer_tb_behav.wcfg
+source CONNECT_testbench_sample.tcl
+close_sim
+launch_simulation
+open_wave_config /home/linkuri267/cnn/conv_layer_tb_behav.wcfg
+source CONNECT_testbench_sample.tcl
