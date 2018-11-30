@@ -1,10 +1,12 @@
-#cnn_accelerator
+cnn_accelerator
+================
 Verilog based convolutional neural network accelerator.
 
 ------------
 
 
-####Directory Structure
+Directory Structure
+-------------------
 - /software_test
 	- **C++ code for software-hardware verification**
 	- source.mem
