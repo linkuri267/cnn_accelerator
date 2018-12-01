@@ -1939,3 +1939,9 @@ $finish called at time : 215 ns : File "/home/linkuri267/cnn/cnn.srcs/sources_1/
 INFO: [USF-XSim-96] XSim completed. Design snapshot 'CONNECT_testbench_sample_behav' loaded.
 INFO: [USF-XSim-97] XSim simulation ran for 1000000ns
 launch_simulation: Time (s): cpu = 00:00:07 ; elapsed = 00:00:08 . Memory (MB): peak = 7378.594 ; gain = 0.000 ; free physical = 766 ; free virtual = 12407
+close_sim
+INFO: [Simtcl 6-16] Simulation closed
+close_sim
+INFO: [Simtcl 6-16] Simulation closed
+exit
+INFO: [Common 17-206] Exiting Vivado at Thu Nov 29 17:58:37 2018...

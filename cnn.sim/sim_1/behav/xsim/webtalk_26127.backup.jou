@@ -2,11 +2,11 @@
 # Webtalk v2018.2 (64-bit)
 # SW Build 2258646 on Thu Jun 14 20:02:38 MDT 2018
 # IP Build 2256618 on Thu Jun 14 22:10:49 MDT 2018
-# Start of session at: Thu Nov 29 16:51:28 2018
-# Process ID: 14900
+# Start of session at: Fri Nov 30 15:58:41 2018
+# Process ID: 26127
 # Current directory: /home/linkuri267/cnn/cnn.sim/sim_1/behav/xsim
-# Command line: wbtcv -mode batch -source /home/linkuri267/cnn/cnn.sim/sim_1/behav/xsim/xsim.dir/mkInputArbiter_behav/webtalk/xsim_webtalk.tcl -notrace
+# Command line: wbtcv -mode batch -source /home/linkuri267/cnn/cnn.sim/sim_1/behav/xsim/xsim.dir/CONNECT_testbench_sample_behav/webtalk/xsim_webtalk.tcl -notrace
 # Log file: /home/linkuri267/cnn/cnn.sim/sim_1/behav/xsim/webtalk.log
 # Journal file: /home/linkuri267/cnn/cnn.sim/sim_1/behav/xsim/webtalk.jou
 #-----------------------------------------------------------
-source /home/linkuri267/cnn/cnn.sim/sim_1/behav/xsim/xsim.dir/mkInputArbiter_behav/webtalk/xsim_webtalk.tcl -notrace
+source /home/linkuri267/cnn/cnn.sim/sim_1/behav/xsim/xsim.dir/CONNECT_testbench_sample_behav/webtalk/xsim_webtalk.tcl -notrace

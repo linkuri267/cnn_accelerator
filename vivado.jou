@@ -102,3 +102,5 @@ close_sim
 launch_simulation
 open_wave_config /home/linkuri267/cnn/conv_layer_tb_behav.wcfg
 source CONNECT_testbench_sample.tcl
+close_sim
+close_sim

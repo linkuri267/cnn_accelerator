@@ -31,7 +31,7 @@ module conv_layer_tb;
     reg signed [`DATA_WIDTH - 1:0] source [`SOURCE_SIZE - 1:0][`SOURCE_SIZE - 1:0];
     reg signed [`DATA_WIDTH - 1:0] destination [`DESTINATION_SIZE - 1:0][`DESTINATION_SIZE -1:0];
 //    reg signed [`DATA_WIDTH - 1:0] test_source [`SOURCE_SIZE - 1:0][`SOURCE_SIZE - 1: 0];
-    reg signed [`DATA_WIDTH - 1:0] test_kernel [`KERNEL_SIZE - 1:0][`KERNEL_SIZE - 1:0];
+    //reg signed [`DATA_WIDTH - 1:0] test_kernel [`KERNEL_SIZE - 1:0][`KERNEL_SIZE - 1:0];
      
     parameter CLK_PERIOD = 10;
     always #(CLK_PERIOD/2) clk = ~clk;

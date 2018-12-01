@@ -1,26 +1,32 @@
-INFO: [VRFC 10-2263] Analyzing Verilog file "/home/linkuri267/cnn/cnn.srcs/sources_1/imports/build/RegFileLoadSyn.v" into library xil_defaultlib
-INFO: [VRFC 10-311] analyzing module RegFileLoadSyn
-INFO: [VRFC 10-2263] Analyzing Verilog file "/home/linkuri267/cnn/cnn.srcs/sources_1/imports/build/RegFile_1port.v" into library xil_defaultlib
-INFO: [VRFC 10-311] analyzing module RegFile_1port
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/linkuri267/cnn/cnn.srcs/sources_1/imports/build/module_gen_grant_carry.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module module_gen_grant_carry
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/linkuri267/cnn/cnn.srcs/sources_1/imports/build/mkInputArbiter.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module mkInputArbiter
 INFO: [VRFC 10-2263] Analyzing Verilog file "/home/linkuri267/cnn/cnn.srcs/sources_1/imports/build/mkInputVCQueues.v" into library xil_defaultlib
 INFO: [VRFC 10-311] analyzing module mkInputVCQueues
-INFO: [VRFC 10-2263] Analyzing Verilog file "/home/linkuri267/cnn/cnn.srcs/sources_1/imports/build/mkNetwork.v" into library xil_defaultlib
-INFO: [VRFC 10-311] analyzing module mkNetwork
-INFO: [VRFC 10-2263] Analyzing Verilog file "/home/linkuri267/cnn/cnn.srcs/sources_1/imports/build/mkOutPortFIFO.v" into library xil_defaultlib
-INFO: [VRFC 10-311] analyzing module mkOutPortFIFO
 INFO: [VRFC 10-2263] Analyzing Verilog file "/home/linkuri267/cnn/cnn.srcs/sources_1/imports/build/mkRouterCore.v" into library xil_defaultlib
 INFO: [VRFC 10-311] analyzing module mkRouterCore
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/linkuri267/cnn/cnn.srcs/sources_1/imports/build/mkRouterOutputArbitersStatic.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module mkRouterOutputArbitersStatic
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/linkuri267/cnn/cnn.srcs/sources_1/imports/build/RegFileLoadSyn.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module RegFileLoadSyn
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/linkuri267/cnn/cnn.srcs/sources_1/imports/build/mkRouterInputArbitersStatic.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module mkRouterInputArbitersStatic
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/linkuri267/cnn/cnn.srcs/sources_1/imports/build/mkSepRouterAllocator.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module mkSepRouterAllocator
 INFO: [VRFC 10-2263] Analyzing Verilog file "/home/linkuri267/cnn/cnn.srcs/sources_1/imports/build/mkRouterInputArbitersRoundRobin.v" into library xil_defaultlib
 INFO: [VRFC 10-311] analyzing module mkRouterInputArbitersRoundRobin
 INFO: [VRFC 10-2263] Analyzing Verilog file "/home/linkuri267/cnn/cnn.srcs/sources_1/imports/build/mkRouterOutputArbitersRoundRobin.v" into library xil_defaultlib
 INFO: [VRFC 10-311] analyzing module mkRouterOutputArbitersRoundRobin
-INFO: [VRFC 10-2263] Analyzing Verilog file "/home/linkuri267/cnn/cnn.srcs/sources_1/imports/build/mkSepRouterAllocator.v" into library xil_defaultlib
-INFO: [VRFC 10-311] analyzing module mkSepRouterAllocator
-INFO: [VRFC 10-2263] Analyzing Verilog file "/home/linkuri267/cnn/cnn.srcs/sources_1/imports/build/module_gen_grant_carry.v" into library xil_defaultlib
-INFO: [VRFC 10-311] analyzing module module_gen_grant_carry
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/linkuri267/cnn/cnn.srcs/sources_1/imports/build/mkOutputArbiter.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module mkOutputArbiter
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/linkuri267/cnn/cnn.srcs/sources_1/imports/build/mkOutPortFIFO.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module mkOutPortFIFO
 INFO: [VRFC 10-2263] Analyzing Verilog file "/home/linkuri267/cnn/cnn.srcs/sources_1/imports/build/module_outport_encoder.v" into library xil_defaultlib
 INFO: [VRFC 10-311] analyzing module module_outport_encoder
-INFO: [VRFC 10-2263] Analyzing Verilog file "/home/linkuri267/cnn/cnn.srcs/sources_1/new/relu.v" into library xil_defaultlib
-INFO: [VRFC 10-311] analyzing module relu
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/linkuri267/cnn/cnn.srcs/sources_1/imports/build/RegFile_1port.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module RegFile_1port
 INFO: [VRFC 10-2263] Analyzing Verilog file "/home/linkuri267/cnn/cnn.srcs/sources_1/imports/build/testbench_sample.v" into library xil_defaultlib
 INFO: [VRFC 10-311] analyzing module CONNECT_testbench_sample
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/linkuri267/cnn/cnn.srcs/sources_1/imports/build/mkNetwork.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module mkNetwork

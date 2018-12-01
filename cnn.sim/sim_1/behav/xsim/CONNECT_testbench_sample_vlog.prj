@@ -1,18 +1,31 @@
 # compile verilog/system verilog design source files
 verilog xil_defaultlib  --include "../../../../cnn.srcs/sources_1/imports/build" --include "../../../../../lab8_noc/lab8_noc.srcs/sources_1/imports/build" --include "../../../../cnn.srcs/sources_1/new" \
-"../../../../cnn.srcs/sources_1/imports/build/RegFileLoadSyn.v" \
-"../../../../cnn.srcs/sources_1/imports/build/RegFile_1port.v" \
+"../../../../cnn.srcs/sources_1/imports/build/module_gen_grant_carry.v" \
+"../../../../cnn.srcs/sources_1/imports/build/mkInputArbiter.v" \
 "../../../../cnn.srcs/sources_1/imports/build/mkInputVCQueues.v" \
-"../../../../cnn.srcs/sources_1/imports/build/mkNetwork.v" \
-"../../../../cnn.srcs/sources_1/imports/build/mkOutPortFIFO.v" \
 "../../../../cnn.srcs/sources_1/imports/build/mkRouterCore.v" \
+"../../../../cnn.srcs/sources_1/imports/build/mkRouterOutputArbitersStatic.v" \
+"../../../../cnn.srcs/sources_1/imports/build/RegFileLoadSyn.v" \
+"../../../../cnn.srcs/sources_1/imports/build/mkRouterInputArbitersStatic.v" \
+"../../../../cnn.srcs/sources_1/imports/build/mkSepRouterAllocator.v" \
 "../../../../cnn.srcs/sources_1/imports/build/mkRouterInputArbitersRoundRobin.v" \
 "../../../../cnn.srcs/sources_1/imports/build/mkRouterOutputArbitersRoundRobin.v" \
-"../../../../cnn.srcs/sources_1/imports/build/mkSepRouterAllocator.v" \
-"../../../../cnn.srcs/sources_1/imports/build/module_gen_grant_carry.v" \
+"../../../../cnn.srcs/sources_1/imports/build/mkOutputArbiter.v" \
+"../../../../cnn.srcs/sources_1/imports/build/mkOutPortFIFO.v" \
 "../../../../cnn.srcs/sources_1/imports/build/module_outport_encoder.v" \
-"../../../../cnn.srcs/sources_1/new/relu.v" \
+"../../../../cnn.srcs/sources_1/imports/build/RegFile_1port.v" \
 "../../../../cnn.srcs/sources_1/imports/build/testbench_sample.v" \
+"../../../../cnn.srcs/sources_1/imports/build/mkNetwork.v" \
+
+sv xil_defaultlib  --include "../../../../cnn.srcs/sources_1/imports/build" --include "../../../../../lab8_noc/lab8_noc.srcs/sources_1/imports/build" --include "../../../../cnn.srcs/sources_1/new" \
+"../../../../cnn.srcs/sources_1/new/conv_layer.sv" \
+"../../../../cnn.srcs/sources_1/new/source_rom.sv" \
+
+verilog xil_defaultlib  --include "../../../../cnn.srcs/sources_1/imports/build" --include "../../../../../lab8_noc/lab8_noc.srcs/sources_1/imports/build" --include "../../../../cnn.srcs/sources_1/new" \
+"../../../../cnn.srcs/sources_1/new/relu.v" \
+
+sv xil_defaultlib  --include "../../../../cnn.srcs/sources_1/imports/build" --include "../../../../../lab8_noc/lab8_noc.srcs/sources_1/imports/build" --include "../../../../cnn.srcs/sources_1/new" \
+"../../../../cnn.srcs/sim_1/new/conv_layer_tb.sv" \
 
 # compile glbl module
 verilog xil_defaultlib "glbl.v"

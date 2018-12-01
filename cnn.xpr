@@ -19,6 +19,7 @@
     <Option Name="CompiledLibDirActivehdl" Val="$PCACHEDIR/compile_simlib/activehdl"/>
     <Option Name="SimulatorLanguage" Val="Verilog"/>
     <Option Name="BoardPart" Val=""/>
+    <Option Name="SourceMgmtMode" Val="DisplayOnly"/>
     <Option Name="ActiveSimSet" Val="sim_1"/>
     <Option Name="DefaultLib" Val="xil_defaultlib"/>
     <Option Name="ProjectType" Val="Default"/>
@@ -32,7 +33,7 @@
     <Option Name="EnableBDX" Val="FALSE"/>
     <Option Name="DSAVendor" Val="xilinx"/>
     <Option Name="DSANumComputeUnits" Val="60"/>
-    <Option Name="WTXSimLaunchSim" Val="115"/>
+    <Option Name="WTXSimLaunchSim" Val="129"/>
     <Option Name="WTModelSimLaunchSim" Val="0"/>
     <Option Name="WTQuestaLaunchSim" Val="0"/>
     <Option Name="WTIesLaunchSim" Val="0"/>
@@ -80,7 +81,6 @@
       </File>
       <File Path="$PSRCDIR/sources_1/imports/build/mkInputVCQueues.v">
         <FileInfo>
-          <Attr Name="AutoDisabled" Val="1"/>
           <Attr Name="ImportPath" Val="$PPRDIR/../Documents/ee454/lab8/build/mkInputVCQueues.v"/>
           <Attr Name="ImportTime" Val="1539476676"/>
           <Attr Name="UsedIn" Val="synthesis"/>
@@ -90,7 +90,6 @@
       </File>
       <File Path="$PSRCDIR/sources_1/imports/build/mkRouterCore.v">
         <FileInfo>
-          <Attr Name="AutoDisabled" Val="1"/>
           <Attr Name="ImportPath" Val="$PPRDIR/../Documents/ee454/lab8/build/mkRouterCore.v"/>
           <Attr Name="ImportTime" Val="1539476676"/>
           <Attr Name="UsedIn" Val="synthesis"/>
@@ -100,7 +99,6 @@
       </File>
       <File Path="$PSRCDIR/sources_1/imports/build/mkRouterOutputArbitersStatic.v">
         <FileInfo>
-          <Attr Name="AutoDisabled" Val="1"/>
           <Attr Name="ImportPath" Val="$PPRDIR/../Documents/ee454/lab8/build/mkRouterOutputArbitersStatic.v"/>
           <Attr Name="ImportTime" Val="1539476676"/>
           <Attr Name="UsedIn" Val="synthesis"/>
@@ -110,7 +108,6 @@
       </File>
       <File Path="$PSRCDIR/sources_1/imports/build/connect_parameters.v">
         <FileInfo SFType="VHeader">
-          <Attr Name="AutoDisabled" Val="1"/>
           <Attr Name="ImportPath" Val="$PPRDIR/../Documents/ee454/lab8/build/connect_parameters.v"/>
           <Attr Name="ImportTime" Val="1539476676"/>
           <Attr Name="UsedIn" Val="synthesis"/>
@@ -119,7 +116,6 @@
       </File>
       <File Path="$PSRCDIR/sources_1/imports/build/RegFileLoadSyn.v">
         <FileInfo>
-          <Attr Name="AutoDisabled" Val="1"/>
           <Attr Name="ImportPath" Val="$PPRDIR/../Documents/ee454/lab8/build/RegFileLoadSyn.v"/>
           <Attr Name="ImportTime" Val="1539476676"/>
           <Attr Name="UsedIn" Val="synthesis"/>
@@ -129,7 +125,6 @@
       </File>
       <File Path="$PSRCDIR/sources_1/imports/build/mkRouterInputArbitersStatic.v">
         <FileInfo>
-          <Attr Name="AutoDisabled" Val="1"/>
           <Attr Name="ImportPath" Val="$PPRDIR/../Documents/ee454/lab8/build/mkRouterInputArbitersStatic.v"/>
           <Attr Name="ImportTime" Val="1539476676"/>
           <Attr Name="UsedIn" Val="synthesis"/>
@@ -139,7 +134,6 @@
       </File>
       <File Path="$PSRCDIR/sources_1/imports/build/mkSepRouterAllocator.v">
         <FileInfo>
-          <Attr Name="AutoDisabled" Val="1"/>
           <Attr Name="ImportPath" Val="$PPRDIR/../Documents/ee454/lab8/build/mkSepRouterAllocator.v"/>
           <Attr Name="ImportTime" Val="1539476676"/>
           <Attr Name="UsedIn" Val="synthesis"/>
@@ -149,7 +143,6 @@
       </File>
       <File Path="$PSRCDIR/sources_1/imports/build/mkRouterInputArbitersRoundRobin.v">
         <FileInfo>
-          <Attr Name="AutoDisabled" Val="1"/>
           <Attr Name="ImportPath" Val="$PPRDIR/../Documents/ee454/lab8/build/mkRouterInputArbitersRoundRobin.v"/>
           <Attr Name="ImportTime" Val="1539476676"/>
           <Attr Name="UsedIn" Val="synthesis"/>
@@ -159,7 +152,6 @@
       </File>
       <File Path="$PSRCDIR/sources_1/imports/build/mkRouterOutputArbitersRoundRobin.v">
         <FileInfo>
-          <Attr Name="AutoDisabled" Val="1"/>
           <Attr Name="ImportPath" Val="$PPRDIR/../Documents/ee454/lab8/build/mkRouterOutputArbitersRoundRobin.v"/>
           <Attr Name="ImportTime" Val="1539476676"/>
           <Attr Name="UsedIn" Val="synthesis"/>
@@ -169,7 +161,6 @@
       </File>
       <File Path="$PSRCDIR/sources_1/imports/build/mkOutputArbiter.v">
         <FileInfo>
-          <Attr Name="AutoDisabled" Val="1"/>
           <Attr Name="ImportPath" Val="$PPRDIR/../Documents/ee454/lab8/build/mkOutputArbiter.v"/>
           <Attr Name="ImportTime" Val="1539476676"/>
           <Attr Name="UsedIn" Val="synthesis"/>
@@ -179,7 +170,6 @@
       </File>
       <File Path="$PSRCDIR/sources_1/imports/build/mkOutPortFIFO.v">
         <FileInfo>
-          <Attr Name="AutoDisabled" Val="1"/>
           <Attr Name="ImportPath" Val="$PPRDIR/../Documents/ee454/lab8/build/mkOutPortFIFO.v"/>
           <Attr Name="ImportTime" Val="1539476676"/>
           <Attr Name="UsedIn" Val="synthesis"/>
@@ -189,7 +179,6 @@
       </File>
       <File Path="$PSRCDIR/sources_1/imports/build/module_outport_encoder.v">
         <FileInfo>
-          <Attr Name="AutoDisabled" Val="1"/>
           <Attr Name="ImportPath" Val="$PPRDIR/../Documents/ee454/lab8/build/module_outport_encoder.v"/>
           <Attr Name="ImportTime" Val="1539476676"/>
           <Attr Name="UsedIn" Val="synthesis"/>
@@ -199,7 +188,6 @@
       </File>
       <File Path="$PSRCDIR/sources_1/imports/build/RegFile_1port.v">
         <FileInfo>
-          <Attr Name="AutoDisabled" Val="1"/>
           <Attr Name="ImportPath" Val="$PPRDIR/../Documents/ee454/lab8/build/RegFile_1port.v"/>
           <Attr Name="ImportTime" Val="1539476676"/>
           <Attr Name="UsedIn" Val="synthesis"/>
@@ -209,7 +197,6 @@
       </File>
       <File Path="$PSRCDIR/sources_1/imports/build/testbench_sample.v">
         <FileInfo>
-          <Attr Name="AutoDisabled" Val="1"/>
           <Attr Name="ImportPath" Val="$PPRDIR/../lab8_noc/lab8_noc.srcs/sources_1/imports/build/testbench_sample.v"/>
           <Attr Name="ImportTime" Val="1543446854"/>
           <Attr Name="UsedIn" Val="synthesis"/>
@@ -219,7 +206,6 @@
       </File>
       <File Path="$PSRCDIR/sources_1/imports/build/mkNetwork.v">
         <FileInfo>
-          <Attr Name="AutoDisabled" Val="1"/>
           <Attr Name="ImportPath" Val="$PPRDIR/../lab8_noc/lab8_noc.srcs/sources_1/imports/build/mkNetwork.v"/>
           <Attr Name="ImportTime" Val="1542763575"/>
           <Attr Name="UsedIn" Val="synthesis"/>
@@ -229,14 +215,12 @@
       </File>
       <File Path="$PPRDIR/../lab8_noc/lab8_noc.srcs/sources_1/imports/build/connect_parameters.v">
         <FileInfo SFType="VHeader">
-          <Attr Name="AutoDisabled" Val="1"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
       <File Path="$PSRCDIR/sources_1/new/conv_layer.sv">
         <FileInfo>
-          <Attr Name="AutoDisabled" Val="1"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="implementation"/>
           <Attr Name="UsedIn" Val="simulation"/>
@@ -244,14 +228,12 @@
       </File>
       <File Path="$PSRCDIR/sources_1/new/cnn_parameters.v">
         <FileInfo SFType="VHeader">
-          <Attr Name="AutoDisabled" Val="1"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
       <File Path="$PSRCDIR/sources_1/new/source_rom.sv">
         <FileInfo>
-          <Attr Name="AutoDisabled" Val="1"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="implementation"/>
           <Attr Name="UsedIn" Val="simulation"/>
@@ -259,7 +241,6 @@
       </File>
       <File Path="$PSRCDIR/sources_1/new/relu.v">
         <FileInfo>
-          <Attr Name="AutoDisabled" Val="1"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="implementation"/>
           <Attr Name="UsedIn" Val="simulation"/>
@@ -270,6 +251,13 @@
           <Attr Name="ImportPath" Val="$PPRDIR/software_test/source.mem"/>
           <Attr Name="ImportTime" Val="1543476462"/>
           <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PSRCDIR/sources_1/new/pooling.sv">
+        <FileInfo>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="implementation"/>
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
@@ -289,7 +277,6 @@
       <Filter Type="Srcs"/>
       <File Path="$PSRCDIR/sim_1/new/conv_layer_tb.sv">
         <FileInfo>
-          <Attr Name="AutoDisabled" Val="1"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="implementation"/>
           <Attr Name="UsedIn" Val="simulation"/>
@@ -308,7 +295,7 @@
         <Option Name="TransportIntDelay" Val="0"/>
         <Option Name="SrcSet" Val="sources_1"/>
         <Option Name="XSimWcfgFile" Val="$PPRDIR/conv_layer_tb_behav.wcfg"/>
-        <Option Name="xsim.simulate.runtime" Val="1000000ns"/>
+        <Option Name="xsim.simulate.runtime" Val="10000000ns"/>
       </Config>
     </FileSet>
   </FileSets>

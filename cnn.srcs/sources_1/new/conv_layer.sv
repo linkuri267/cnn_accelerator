@@ -26,8 +26,9 @@ module conv_layer(
     input clk,
     input reset,
     input start,
-    input signed [`DATA_WIDTH - 1:0] kernel [`KERNEL_SIZE - 1:0][`KERNEL_SIZE - 1:0],
-    output signed [`DATA_WIDTH - 1:0] destination [`DESTINATION_SIZE - 1:0][`DESTINATION_SIZE - 1:0]
+    output signed [`DATA_WIDTH - 1:0] destination [`DESTINATION_SIZE - 1:0][`DESTINATION_SIZE - 1:0],
+    output [68:0] send_data,
+    output send_data_en
     );
     
     //state reg and declarations
@@ -47,6 +48,15 @@ module conv_layer(
     
     reg done;
     
+    //NOC registers
+    reg counter;
+    reg [68:0] flit_buffer;
+    reg send_data_en_reg;
+    
+    assign send_data = flit_buffer;
+    assign send_data_en = send_data_en_reg;
+    
+    
     assign destination = destination_local;
     
     
@@ -58,21 +68,22 @@ module conv_layer(
                     $fscanf(fsource,"%hh",source_local[`SOURCE_SIZE - i - 1][`SOURCE_SIZE - j - 1]);
                 end
             end
-        
+            
+            
     end
     
     
     always @(posedge clk, posedge reset) begin
         if(reset) begin
                 
-            for(int i = 0; i < `KERNEL_SIZE; i ++) begin
-                for(int j = 0; j < `KERNEL_SIZE; j++) begin
-                    kernel_local[i][j] <= 8'd0;
+            for(int i_k = 0; i_k < `KERNEL_SIZE; i_k = i_k + 1) begin
+                for(int j_k = 0; j_k < `KERNEL_SIZE; j_k = j_k + 1) begin
+                    kernel_local [`KERNEL_SIZE - i_k - 1][`KERNEL_SIZE - j_k - 1] <= j_k + i_k*`KERNEL_SIZE;
                 end
             end
             for(int i = 0; i < `DESTINATION_SIZE; i ++) begin
                 for(int j = 0; j < `DESTINATION_SIZE; j++) begin
-                    destination_local[i][j] <= 8'd0;
+                    destination_local[i][j] <= 32'd0;
                 end
             end
             
@@ -81,6 +92,10 @@ module conv_layer(
             
             done <= 1'b0;
             
+            //NOC registers
+            counter <= 1'b0;
+            flit_buffer <= 69'd0;
+            send_data_en_reg <= 1'b0;
             
             //set initial state
             state <= INITIAL;
@@ -91,12 +106,16 @@ module conv_layer(
             case(state) 
                 INITIAL: begin
                     //load inputs into local register
-                    kernel_local <= kernel;
                     for(int i = 0; i < `DESTINATION_SIZE; i ++) begin
                         for(int j = 0; j < `DESTINATION_SIZE; j++) begin
                             destination_local[i][j] <= 8'd0;
                         end
                     end
+                    
+                    
+                    flit_buffer[68] <= 1'b1; //set valid to 1
+                    flit_buffer[66:65] <= 2'd0; //destination is R0 (reLU layer)
+                    flit_buffer[64] <= 1'b0;
                     
                     if(start) begin
                         state <= CALC;
@@ -104,18 +123,24 @@ module conv_layer(
                 end
                 
                 CALC: begin
-
+                
                       for(int i = 0; i < `KERNEL_SIZE; i++) begin
                         for(int j = 0; j < `KERNEL_SIZE; j++) begin
                             destination_local[v_offset][h_offset] = destination_local[v_offset][h_offset] + (kernel_local[i][j]*source_local[v_offset+i][h_offset+j]);
                         end
                       end
-
-
                       
                       if(h_offset == `DESTINATION_SIZE - 1) begin
                         if(v_offset == `DESTINATION_SIZE -1) begin
                             state <= DONE;
+                            if((`DESTINATION_SIZE % 2) == 0) begin
+                                flit_buffer[63:32] <= destination_local[v_offset][h_offset];
+                            end
+                            else begin
+                                flit_buffer[31:0] <= destination_local[v_offset][h_offset];
+                            end
+                            flit_buffer[67] <= 1'b1; //last flit, set tail to 1
+                            
                         end
                         else begin
                             h_offset <= 4'b0;
@@ -124,6 +149,18 @@ module conv_layer(
                       end
                       else begin
                         h_offset <= h_offset + 1;
+                      end
+                      
+                      if(counter == 1'b1) begin
+                        counter <= 1'b0;
+                        send_data_en_reg <= 1'b1;
+                        flit_buffer[63:32] <= destination_local[v_offset][h_offset];
+                        flit_buffer[67] <= 1'b0; //not last flit, set tail to 0
+                      end
+                      else begin
+                        flit_buffer[31:0] <= destination_local[v_offset][h_offset];
+                        counter <= counter + 1;
+                        send_data_en_reg <= 1'b0;
                       end
                       
                       //PURELY SEQUENTIAL METHOD COMMENTED OUT
@@ -165,6 +202,11 @@ module conv_layer(
                 
                 DONE: begin
                    done <= 1'b1;
+                   send_data_en_reg <= 1'b0;
+                   
+                   if(start) begin
+                    state <= INITIAL;
+                   end  
                 end
                   
             endcase

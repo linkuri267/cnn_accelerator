@@ -48,6 +48,7 @@
 `timescale 1ns / 1ps
 
 `include "connect_parameters.v"
+`include "cnn_parameters.v"
 
 
 module CONNECT_testbench_sample();
@@ -88,6 +89,13 @@ module CONNECT_testbench_sample();
   // Generate Clock
   initial Clk = 0;
   always #(HalfClkPeriod) Clk = ~Clk;
+  
+  //start signals conv layers
+  reg start_conv0;
+  reg start_conv1;
+
+  integer i_k;
+  integer j_k;
 
   // Run simulation 
   initial begin 
@@ -100,18 +108,23 @@ module CONNECT_testbench_sample();
     #(5*ClkPeriod+HalfClkPeriod); 
     Rst_n = 1; 
     #(HalfClkPeriod);
+
+
     
-    // send a 2-flit packet from send port 0 to receive port 1
-    send_flit[1] = 1'b1;
-    dest = 0;
-    vc = 0;
-    data[31:0] = 32'hffffffff;
-    data[63:32] = 32'd10;
-    flit_in[1] = {1'b1 /*valid*/, 1'b0 /*tail*/, dest, vc, data};
-    $display("@%3d: Injecting flit %x into send port %0d", cycle, flit_in[1], 0);
-    #(ClkPeriod);
-    send_flit[1] = 1'b0;
+    //RELU TEST
+//    send_flit[1] = 1'b1;
+//    dest = 0;
+//    vc = 0;
+//    data[31:0] = 32'hffffffff;
+//    data[63:32] = 32'd10;
+//    flit_in[1] = {1'b1 /*valid*/, 1'b0 /*tail*/, dest, vc, data};
+//    $display("@%3d: Injecting flit %x into send port %0d", cycle, flit_in[1], 0);
+//    #(ClkPeriod);
+//    send_flit[1] = 1'b0;
     
+	  start_conv0 = 1'b1;
+	  
+	  #(ClkPeriod);
 	
     end
   
@@ -135,8 +148,14 @@ module CONNECT_testbench_sample();
 
   // Add your code to handle flow control here (sending receiving credits)
 
-wire send_flit_en0;
-wire [68:0] send_flit_data0;
+wire send_flit_en0; //ReLU en
+wire [68:0] send_flit_data0; //ReLU data out
+
+wire send_flit_en2; //conv0 en
+wire [68:0] send_flit_data2; //conv0 data
+
+wire send_flit_en3; //conv1 en
+wire [68:0] send_flit_data3; //conv1 data
 
   // Instantiate CONNECT network
   mkNetwork dut
@@ -147,7 +166,7 @@ wire [68:0] send_flit_data0;
    ,.send_ports_0_putFlit_flit_in(send_flit_data0)
    ,.EN_send_ports_0_putFlit(send_flit_en0)
 
-   ,.EN_send_ports_0_getCredits(1'b1) // drain credits
+   ,.EN_send_ports_0_getCredits(1'b1) // dra    in credits
    ,.send_ports_0_getCredits(credit_out[0])
 
    ,.send_ports_1_putFlit_flit_in(flit_in[1])
@@ -159,8 +178,8 @@ wire [68:0] send_flit_data0;
    // step 1:  add rest of send ports here
    //
    
-   ,.send_ports_2_putFlit_flit_in(flit_in[2])
-   ,.EN_send_ports_2_putFlit(send_flit[2])
+   ,.send_ports_2_putFlit_flit_in(send_flit_data2)
+   ,.EN_send_ports_2_putFlit(send_flit_en2)
 
    ,.EN_send_ports_2_getCredits(1'b1) // drain credits
    ,.send_ports_2_getCredits(credit_out[2])
@@ -210,6 +229,12 @@ wire [68:0] send_flit_data0;
               .data_in(flit_out[0]),
               .send_data(send_flit_data0),
               .send_data_en(send_flit_en0));
+              
+   conv_layer conv0(.clk(Clk),
+                    .reset(~Rst_n),
+                    .start(start_conv0),
+                    .send_data(send_flit_data2),
+                    .send_data_en(send_flit_en2));
 
 
 endmodule
