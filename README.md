@@ -27,9 +27,11 @@ Directory Structure
 			- cnn_parameters.v
 				- **Verilog headers containing data width, image width, etc**
 			- conv_layer.sv
-				- **Convolutional layer (not NOC ready)**
+				- **Convolutional layer**
 			- relu.v
-				 - **ReLU layer (NOC ready)**
+				 - **ReLU layer**
+			- pooling.sv
+				- **Pooling layer**
 			- source_rom.sv
 				 - **Not currently used**
 	- /sim_1
