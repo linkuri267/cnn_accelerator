@@ -3,83 +3,45 @@
 #include <iostream>
 #include <fstream>
 #include <iomanip>
-#include <stdio.h>
-#include <stdlib.h>
-#include "time.h"
-
+#include <algorithm>
 
 void convolveImage( const struct image& image, const struct kernel& kernel)
 {
   struct node activatedNode;
   activatedNode.mNode = new std::vector< std::vector<int> >;
+
+  // prints original values
+  activatedNode.mNode->assign(image.mImage->begin(), image.mImage->end());
+  printShit(activatedNode);
+  activatedNode.mNode->clear();
   
-  // Assuming NxN
-  int x_length = static_cast<int>(image.mImage->size());
-  int y_length = static_cast<int>(image.mImage->size());
+  std::cout << "-----------------\n";
   
-  int kernel_length = static_cast<int>(kernel.mKernel->size());
-  int convolvedValue = 0;
-  int values[9];
-  for(int i = 0; i < (x_length - kernel_length + 1); ++i)
-  {
-    std::vector<int> *temp = new std::vector<int>;
-    for(int j = 0; j < (y_length - kernel_length + 1); ++j)
-    {
-      convolvedValue = 0;
-      // Convolve the image to the kernel
-      values[0] = image.mImage->at(i)[j]      * kernel.mKernel->at(0)[0];
-      values[1] = image.mImage->at(i+1)[j]    * kernel.mKernel->at(1)[0];
-      values[2] = image.mImage->at(i+2)[j]    * kernel.mKernel->at(2)[0];
-      values[3] = image.mImage->at(i)[j+1]    * kernel.mKernel->at(0)[1];
-      values[4] = image.mImage->at(i+1)[j+1]  * kernel.mKernel->at(1)[1];
-      values[5] = image.mImage->at(i+2)[j+1]  * kernel.mKernel->at(2)[1];
-      values[6] = image.mImage->at(i)[j+2]    * kernel.mKernel->at(0)[2];
-      values[7] = image.mImage->at(i+1)[j+2]  * kernel.mKernel->at(1)[2];
-      values[8] = image.mImage->at(i+2)[j+2]  * kernel.mKernel->at(2)[2];
-      // Sum up all the values
-      for(int k = 0; k < 9; ++k)
-      {
-        convolvedValue += values[k];
-      }
-      temp->push_back(convolvedValue);
-    }    
-    // Add a new row
-    activatedNode.mNode->push_back( *temp );
-  }
+  //originalConvolution(image, kernel, activatedNode);
+  //relu(image, kernel, activatedNode);
+  maxPool(image, kernel, activatedNode);
+
   
-  outputShit(activatedNode);
+  printShit(activatedNode);
   
 }
 
 void initImage(const struct image& image)
 {
-  srand (time(NULL));
-  std::fstream verilogTestFile;
-  verilogTestFile.open("source.mem", std::ios::out);
-
   // You can change the 99 to the size you want later
-  image.mImage->resize(99);
+  image.mImage->resize(12);
   
   // 0-98
-
-  int number;
+  
   int imageRowSize = static_cast<int>(image.mImage->size());
   for(int i = 0; i < imageRowSize; ++i)
   {
-    //image.mImage->at(i).resize(imageRowSize);
     
     for(int j = 0; j < imageRowSize; ++j)
     {
-      number = (rand() % 256) - 128;
-
-      image.mImage->at(i).push_back(number);
-      verilogTestFile << std::hex << number << " ";
-
+      image.mImage->at(i).push_back(j-5);
     }
   }
-  verilogTestFile.close();
-
-  
 }
 
 void initKernel(const struct kernel& kernel)
@@ -115,42 +77,152 @@ void initKernel(const struct kernel& kernel)
    }*/
 }
 
+void originalConvolution( const struct image& image, const struct kernel& kernel, struct node& activatedNode )
+{
+  // Assuming NxN
+  int x_length = static_cast<int>(image.mImage->size());
+  int y_length = static_cast<int>(image.mImage->size());
+  
+  int kernel_length = static_cast<int>(kernel.mKernel->size());
+  int convolvedValue = 0;
+  int values[9];
+  
+  for(int i = 0; i < (x_length - kernel_length + 1); ++i)
+  {
+    std::vector<int> *temp = new std::vector<int>;
+    for(int j = 0; j < (y_length - kernel_length + 1); ++j)
+    {
+      convolvedValue = 0;
+      // Convolve the image to the kernel
+      values[0] = image.mImage->at(i)[j]      * kernel.mKernel->at(0)[0];
+      values[1] = image.mImage->at(i+1)[j]    * kernel.mKernel->at(1)[0];
+      values[2] = image.mImage->at(i+2)[j]    * kernel.mKernel->at(2)[0];
+      values[3] = image.mImage->at(i)[j+1]    * kernel.mKernel->at(0)[1];
+      values[4] = image.mImage->at(i+1)[j+1]  * kernel.mKernel->at(1)[1];
+      values[5] = image.mImage->at(i+2)[j+1]  * kernel.mKernel->at(2)[1];
+      values[6] = image.mImage->at(i)[j+2]    * kernel.mKernel->at(0)[2];
+      values[7] = image.mImage->at(i+1)[j+2]  * kernel.mKernel->at(1)[2];
+      values[8] = image.mImage->at(i+2)[j+2]  * kernel.mKernel->at(2)[2];
+      
+      // Sum up all the values
+      for(int k = 0; k < 9; ++k)
+      {
+        convolvedValue += values[k];
+      }
+      temp->push_back(convolvedValue);
+    }
+    // Add a new row
+    activatedNode.mNode->push_back( *temp );
+  }
+}
+
+void relu( const struct image& image, const struct kernel &kernel, struct node& activatedNode)
+{
+  // Assuming NxN
+  int x_length = static_cast<int>(image.mImage->size());
+  int y_length = static_cast<int>(image.mImage->size());
+  
+  activatedNode.mNode->assign(image.mImage->begin(), image.mImage->end());
+  
+  for(int i = 0; i < (x_length); ++i)
+  {
+    for(int j = 0; j < (y_length); ++j)
+    {
+      if( image.mImage->at(i)[j] < 0)
+      {
+        activatedNode.mNode->at(i)[j] = 0;
+      }
+      // else don't do anything
+    }
+  }
+}
+
+void maxPool( const struct image& image, const struct kernel& kernel, struct node& activatedNode )
+{
+  // Assuming NxN
+  int x_length = static_cast<int>(image.mImage->size());
+  int y_length = static_cast<int>(image.mImage->size());
+  
+  int kernel_length = static_cast<int>(kernel.mKernel->size());
+  //int convolvedValue = 0;
+  int values[9];
+  
+  int currMaxValue = 0;
+  
+  for(int i = 0; i < (x_length - kernel_length + 1); ++i)
+  {
+    std::vector<int> *temp = new std::vector<int>;
+    for(int j = 0; j < (y_length - kernel_length + 1); ++j)
+    {
+      //convolvedValue = 0;
+      // Convolve the image to the kernel
+      values[0] = image.mImage->at(i)[j];
+      values[1] = image.mImage->at(i+1)[j];
+      values[2] = image.mImage->at(i+2)[j];
+      values[3] = image.mImage->at(i)[j+1];
+      values[4] = image.mImage->at(i+1)[j+1];
+      values[5] = image.mImage->at(i+2)[j+1];
+      values[6] = image.mImage->at(i)[j+2];
+      values[7] = image.mImage->at(i+1)[j+2];
+      values[8] = image.mImage->at(i+2)[j+2];
+      
+      // find max value
+      // Sum up all the values
+      currMaxValue = values[0];
+      for(int k = 0; k < 9; ++k)
+      {
+        if(currMaxValue < values[k])
+        {
+          currMaxValue = values[k];
+        }
+      }
+      temp->push_back(currMaxValue);
+    }
+    
+    // Add a new row
+    activatedNode.mNode->push_back( *temp );
+  }
+}
+
 void printShit(const struct node &node)
 {
   // Assuming NxN
   int x_length = static_cast<int>(node.mNode->size());
   int y_length = static_cast<int>(node.mNode->size());
   
+  std::cout << "XL:" << x_length << std::endl;
+  std::cout << "YL:" << y_length << std::endl;
+  
   for(int i = 0; i < x_length; ++i)
   {
-    std::cout << "{";
     for(int j = 0; j < y_length; ++j)
     {
       std::cout << node.mNode->at(i)[j] << ",";
     }
-    std::cout << "}" << std::endl;
+    
+    std::cout << std::endl;
   }
 }
 
 void outputShit(const struct node& node){
-	std::fstream softwareOuput;
-	softwareOuput.open("software_output.txt", std::ios::out);
+  std::fstream softwareOuput;
+  softwareOuput.open("software_output.txt", std::ios::out);
 
 
-	  // Assuming NxN
-	  int x_length = static_cast<int>(node.mNode->size());
-	  int y_length = static_cast<int>(node.mNode->size());
-	  
+    // Assuming NxN
+    int x_length = static_cast<int>(node.mNode->size());
+    int y_length = static_cast<int>(node.mNode->size());
+    
     softwareOuput << "{";
-	  for(int i = 0; i < x_length; ++i)
-	  {
-	    softwareOuput << "{";
-	    for(int j = 0; j < y_length; ++j)
-	    {
-	      softwareOuput << node.mNode->at(i)[j] << ",";
-	    }
-	    softwareOuput << "}" << std::endl;
-	  }
+    for(int i = 0; i < x_length; ++i)
+    {
+      softwareOuput << "{";
+      for(int j = 0; j < y_length; ++j)
+      {
+        softwareOuput << node.mNode->at(i)[j] << ",";
+      }
+      softwareOuput << "}" << std::endl;
+    }
     softwareOuput << "}";
-	  softwareOuput.close();
+    softwareOuput.close();
 }

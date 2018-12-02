@@ -23,9 +23,13 @@ struct node
 // Needs to convolve 99x99 image and 3x3 kernel
 void convolveImage( const struct image& image, const struct kernel& kernel);
 
-void printShit(const struct node &node);
+void originalConvolution( const struct image& image, const struct kernel& kernel, struct node& activatedNode );
 
-void outputShit(const struct node &node);
+void relu( const struct image& image, const struct kernel &kernel, struct node& activatedNode );
+
+void maxPool( const struct image& image, const struct kernel& kernel, struct node& activatedNode );
+
+void printShit(const struct node &node);
 
 void initImage(const struct image& image);
 

@@ -15,6 +15,5 @@ int main(int argc, const char * argv[]) {
   
   convolveImage(testImage, testKernel);
   
-  std::cout << "Hello, World!\n";
   return 0;
 }
