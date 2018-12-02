@@ -46,7 +46,7 @@ module conv_layer#(
     output logic send_data_en
 );
     conv_layer_state state;
-    
+
     reg T [data_width - 1:0] source_img [src_height - 1:0][src_width - 1:0];
     reg T [data_width - 1:0] kernel [kernel_size - 1:0][kernel_size - 1:0];
     reg T [data_width - 1:0] feature_map [dest_height - 1:0][dest_width - 1:0];
@@ -95,10 +95,8 @@ module conv_layer#(
     task reset_layer();
         begin
             initialize_kernel();
+            initialize_offsets();
             clear_local_destination();
-
-            v_off <= 0;
-            h_off <= 0;
 
             set_done(1'b0);
             parity <= 1'b0;
@@ -111,11 +109,12 @@ module conv_layer#(
 
     task do_initial_state();
         begin
+            initialize_offsets();
             clear_local_destination();
 
             set_valid(1'b1);
             set_destination(2'd0);
-            set_fifth_highest_bit(1'b0);
+            set_virtual_channel(1'b0);
 
             if (start) begin
                 state <= CALC;
@@ -141,7 +140,6 @@ module conv_layer#(
         end
     endtask
 
-
     task clear_local_destination();
         for (genvar i = 0; i < dest_height; i ++) begin
             for (genvar j = 0; j < dest_width; j++) begin
@@ -166,9 +164,8 @@ module conv_layer#(
         flit_buffer[buffer_size - 3:buffer_size - 4] <= dest;
     endtask
 
-    task set_fifth_highest_bit(input logic bit_val);
-        // what the fuck does this do
-        flit_buffer[buffer_size - 5] <= 1'b0;
+    task set_virtual_channel(input logic bit_val);
+        flit_buffer[buffer_size - 5] <= bit_val;
     endtask
 
     task set_enable_send(input logic should_enable);
@@ -178,7 +175,6 @@ module conv_layer#(
     task clear_flit_buffer();
         flit_buffer <= {$bits(flit_buffer) {1'0}};
     endtask
-
 
     task initialize_kernel();
         begin
@@ -190,15 +186,14 @@ module conv_layer#(
         end
     endtask
 
-    task set_buffer_flits(input logic is_upper_flit, input logic is_last_flit = 1'b0);
+    task set_buffer_flits(input logic is_upper_flit, input logic last_in_row = 1'b0);
         begin
             if (is_upper_flit) begin
                 flit_buffer[(2 * data_width) - 1:data_width] <= feature_map[v_off][h_off];
-                set_last_flit(is_last_flit);
             end else begin
                 flit_buffer[data_width - 1:0] <= feature_map[v_off][h_off];
             end
-            set_enable_send(is_upper_flit || is_last_flit);
+            set_enable_send(is_upper_flit || last_in_row);
         end
     endtask
 
@@ -219,11 +214,11 @@ module conv_layer#(
     endtask
 
     task send_current_pixel();
-        logic is_last_flit = 1'b0;
+        logic is_last_flit = 1'b0, last_in_row = 1'b0;
         begin
             if (h_off == dest_width - 1) begin
+                last_in_row = 1'b1;
                 if (v_off == dest_height - 1) begin
-                    send_last_flit();
                     is_last_flit = 1'b1;
                 end else begin
                     {h_off, v_off} <= {4'b0, v_off + 1};
@@ -232,16 +227,21 @@ module conv_layer#(
             else begin
                 h_off <= h_off + 1;
             end
-            
-            if (!is_last_flit) begin 
-                set_buffer_flits(/* upper_bits = */ (parity != 0), /* last = */ 1'b0);
-            end
-            toggle_parity();
+
+            set_last_flit(is_last_flit);
+            set_buffer_flits(parity, last_in_row);
+
+            update_parity();
         end
     endtask
 
-    task toggle_parity();
-        parity ^= 1'b1;
+    task update_parity();
+        parity <= !parity && (h_off < (dest_width - 1));
+    endtask
+
+    task initialize_offsets();
+        v_off <= 0;
+        h_off <= 0;
     endtask
 
 endmodule
