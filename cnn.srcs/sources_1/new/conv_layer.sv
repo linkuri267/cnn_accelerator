@@ -20,200 +20,228 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 `include "cnn_parameters.v"
-
  
-module conv_layer(
+
+typedef enum {
+    INIT,
+    CALC,
+    DONE
+} conv_layer_state;
+
+module conv_layer#(
+    type      T             =  shortreal,
+    parameter data_width    =  $size(T),
+    parameter src_height    = `SOURCE_SIZE,
+    parameter src_width     = `SOURCE_SIZE,
+    parameter dest_height   = `DESTINATION_SIZE,
+    parameter dest_width    = `DESTINATION_SIZE,
+    parameter kernel_size   = `KERNEL_SIZE,
+    parameter buffer_size   = (2 * $size(T)) + 5
+) (
     input clk,
     input reset,
     input start,
-    output signed [`DATA_WIDTH - 1:0] destination [`DESTINATION_SIZE - 1:0][`DESTINATION_SIZE - 1:0],
-    output [68:0] send_data,
-    output send_data_en
-    );
+    output T destination [dest_height - 1:0][dest_width - 1:0],
+    output [buffer_size:0] send_data,
+    output logic send_data_en
+);
+    conv_layer_state state;
     
-    //state reg and declarations
-    reg [2:0] state;
-    localparam 
-    INITIAL = 3'b001, CALC = 3'b010, DONE = 3'b100;
+    reg T [data_width - 1:0] source_img [src_height - 1:0][src_width - 1:0];
+    reg T [data_width - 1:0] kernel [kernel_size - 1:0][kernel_size - 1:0];
+    reg T [data_width - 1:0] feature_map [dest_height - 1:0][dest_width - 1:0];
     
-    //local regs
-    reg signed [`DATA_WIDTH - 1:0] source_local [`SOURCE_SIZE - 1:0][`SOURCE_SIZE - 1:0];
-    reg signed [`DATA_WIDTH - 1:0] kernel_local [`KERNEL_SIZE - 1:0][`KERNEL_SIZE - 1:0];
-    reg signed [`DATA_WIDTH - 1:0] destination_local [`DESTINATION_SIZE - 1:0][`DESTINATION_SIZE - 1:0];
+    localparam dh_bits = $bits(dest_height);
+    localparam dw_bits = $bits(dest_width);
+    localparam sh_bits = $bits(src_height);
+    localparam sw_bits = $bits(src_width);
+    // localparam buffer_size = (2 * data_width) + 5;
+
+    reg [sh_bits:0] v_off;
+    reg [sw_bits:0] h_off;
     
-    reg [6:0] v_offset;
-    reg [6:0] h_offset;
-//    reg [3:0] v_offset_local;
-//    reg [3:0] h_offset_local;
-    
-    reg done;
+    logic done;
     
     //NOC registers
-    reg counter;
-    reg [68:0] flit_buffer;
-    reg send_data_en_reg;
+    logic parity;
+    reg [buffer_size:0] flit_buffer;
     
     assign send_data = flit_buffer;
-    assign send_data_en = send_data_en_reg;
+    assign destination = feature_map;
     
-    
-    assign destination = destination_local;
-    
-    
-    initial begin
-            integer fsource;
-            fsource = $fopen("source.mem","r");
-            for(int i = 0; i < `SOURCE_SIZE; i++) begin
-                for(int j = 0; j < `SOURCE_SIZE; j++) begin
-                    $fscanf(fsource,"%hh",source_local[`SOURCE_SIZE - i - 1][`SOURCE_SIZE - j - 1]);
-                end
+    initial begin : initialize_source
+        integer fsource;
+        fsource = $fopen("source.mem","r");
+        for (genvar i = 0; i < src_height; i++) begin
+            for (genvar j = 0; j < src_width; j++) begin
+                $fscanf(fsource, "%hh", source_img[src_height - i - 1][src_width - j - 1]);
             end
-            
-            
+        end
     end
     
-    
-    always @(posedge clk, posedge reset) begin
-        if(reset) begin
-                
-            for(int i_k = 0; i_k < `KERNEL_SIZE; i_k = i_k + 1) begin
-                for(int j_k = 0; j_k < `KERNEL_SIZE; j_k = j_k + 1) begin
-                    kernel_local [`KERNEL_SIZE - i_k - 1][`KERNEL_SIZE - j_k - 1] <= j_k + i_k*`KERNEL_SIZE;
-                end
-            end
-            for(int i = 0; i < `DESTINATION_SIZE; i ++) begin
-                for(int j = 0; j < `DESTINATION_SIZE; j++) begin
-                    destination_local[i][j] <= 32'd0;
-                end
-            end
-            
-            v_offset <= 7'b0;
-            h_offset <= 7'b0;
-            
-            done <= 1'b0;
-            
-            //NOC registers
-            counter <= 1'b0;
-            flit_buffer <= 69'd0;
-            send_data_en_reg <= 1'b0;
-            
-            //set initial state
-            state <= INITIAL;
-            
-            
+    always_ff @(posedge clk, posedge reset) begin
+        if (reset) begin
+            reset_layer();
         end
         else begin
-            case(state) 
-                INITIAL: begin
-                    //load inputs into local register
-                    for(int i = 0; i < `DESTINATION_SIZE; i ++) begin
-                        for(int j = 0; j < `DESTINATION_SIZE; j++) begin
-                            destination_local[i][j] <= 8'd0;
-                        end
-                    end
-                    
-                    
-                    flit_buffer[68] <= 1'b1; //set valid to 1
-                    flit_buffer[66:65] <= 2'd0; //destination is R0 (reLU layer)
-                    flit_buffer[64] <= 1'b0;
-                    
-                    if(start) begin
-                        state <= CALC;
-                    end
-                end
-                
-                CALC: begin
-                
-                      for(int i = 0; i < `KERNEL_SIZE; i++) begin
-                        for(int j = 0; j < `KERNEL_SIZE; j++) begin
-                            destination_local[v_offset][h_offset] = destination_local[v_offset][h_offset] + (kernel_local[i][j]*source_local[v_offset+i][h_offset+j]);
-                        end
-                      end
-                      
-                      if(h_offset == `DESTINATION_SIZE - 1) begin
-                        if(v_offset == `DESTINATION_SIZE -1) begin
-                            state <= DONE;
-                            if((`DESTINATION_SIZE % 2) == 0) begin
-                                flit_buffer[63:32] <= destination_local[v_offset][h_offset];
-                            end
-                            else begin
-                                flit_buffer[31:0] <= destination_local[v_offset][h_offset];
-                            end
-                            flit_buffer[67] <= 1'b1; //last flit, set tail to 1
-                            
-                        end
-                        else begin
-                            h_offset <= 4'b0;
-                            v_offset <= v_offset + 1;
-                        end
-                      end
-                      else begin
-                        h_offset <= h_offset + 1;
-                      end
-                      
-                      if(counter == 1'b1) begin
-                        counter <= 1'b0;
-                        send_data_en_reg <= 1'b1;
-                        flit_buffer[63:32] <= destination_local[v_offset][h_offset];
-                        flit_buffer[67] <= 1'b0; //not last flit, set tail to 0
-                      end
-                      else begin
-                        flit_buffer[31:0] <= destination_local[v_offset][h_offset];
-                        counter <= counter + 1;
-                        send_data_en_reg <= 1'b0;
-                      end
-                      
-                      //PURELY SEQUENTIAL METHOD COMMENTED OUT
-                    
-//                    destination_local[v_offset][h_offset] <= destination_local[v_offset][h_offset] + (kernel_local[v_offset_local][h_offset_local]*source_local[v_offset+v_offset_local][h_offset+h_offset_local]);
-
-//                    //destination_local[v_offset][h_offset] <= 8'd120;
-                    
-//                   //if at last element and all done with convolution 
-//                    if((v_offset == `DESTINATION_SIZE - 1)&&(h_offset == `DESTINATION_SIZE - 1)&&(v_offset_local == `KERNEL_SIZE - 1)&&(h_offset_local == `KERNEL_SIZE - 1)) begin
-//                       state <= DONE; 
-//                    end
-                    
-//                    //if at the end of row and all done with convolution
-//                    else if((h_offset == `DESTINATION_SIZE - 1)&&(v_offset_local == `KERNEL_SIZE -1)&&(h_offset_local == `KERNEL_SIZE - 1)) begin
-//                        v_offset <= v_offset + 1;
-//                        h_offset <= 7'b0;
-//                        v_offset_local <= 4'b0;
-//                        h_offset_local <= 4'b0;
-//                    end
-                    
-//                    //if all done with convolution
-//                    else if((h_offset_local == `KERNEL_SIZE - 1)&&(v_offset_local == `KERNEL_SIZE -1)) begin
-//                        h_offset <= h_offset + 1;
-//                        v_offset_local <= 4'b0;
-//                        h_offset_local <= 4'b0;
-//                    end
-                    
-//                    //if at the end of row convolution
-//                    else if(h_offset_local == `KERNEL_SIZE -1) begin
-//                        v_offset_local <= v_offset_local + 1;
-//                        h_offset_local <= 4'b0;
-//                    end
-//                    else begin
-//                        h_offset_local <= h_offset_local + 1;
-//                    end
-
-                end
-                
-                DONE: begin
-                   done <= 1'b1;
-                   send_data_en_reg <= 1'b0;
-                   
-                   if(start) begin
-                    state <= INITIAL;
-                   end  
-                end
-                  
+            case (state)
+                INITIAL:    do_initial_state();
+                CALC:       do_calc_state();
+                DONE:       do_done_state();
             endcase
         end 
     end
     
-     
-    
-    
+    task reset_layer();
+        begin
+            initialize_kernel();
+            clear_local_destination();
+
+            v_off <= 0;
+            h_off <= 0;
+
+            set_done(1'b0);
+            parity <= 1'b0;
+            clear_flit_buffer();
+            set_enable_send(1'b0);
+
+            state <= INITIAL;
+        end
+    endtask
+
+    task do_initial_state();
+        begin
+            clear_local_destination();
+
+            set_valid(1'b1);
+            set_destination(2'd0);
+            set_fifth_highest_bit(1'b0);
+
+            if (start) begin
+                state <= CALC;
+            end
+        end
+    endtask
+
+    task do_calc_state();
+    begin
+        convolve_current_pixel();
+        send_current_pixel();
+    end
+    endtask
+
+    task do_done_state();
+        begin
+            set_done(1'b1);
+            set_enable_send(1'b0);
+
+            if (start) begin
+                state <= INITIAL;
+            end
+        end
+    endtask
+
+
+    task clear_local_destination();
+        for (genvar i = 0; i < dest_height; i ++) begin
+            for (genvar j = 0; j < dest_width; j++) begin
+                feature_map[i][j] <= 0;
+            end
+        end
+    endtask
+
+    task set_done (input logic is_done);
+        done <= is_done;
+    endtask
+
+    task set_valid (input logic is_valid);
+        flit_buffer[buffer_size - 1] <= is_valid;
+    endtask
+
+    task set_last_flit(input logic is_last);
+        flit_buffer[buffer_size - 2] <= is_last;
+    endtask
+
+    task set_destination(input logic dest[1:0]);
+        flit_buffer[buffer_size - 3:buffer_size - 4] <= dest;
+    endtask
+
+    task set_fifth_highest_bit(input logic bit_val);
+        // what the fuck does this do
+        flit_buffer[buffer_size - 5] <= 1'b0;
+    endtask
+
+    task set_enable_send(input logic should_enable);
+        send_data_en <= should_enable;
+    endtask
+
+    task clear_flit_buffer();
+        flit_buffer <= {$bits(flit_buffer) {1'0}};
+    endtask
+
+
+    task initialize_kernel();
+        begin
+            for (genvar i_k = 0; i_k < kernel_size; i_k = i_k + 1) begin
+                for (genvar j_k = 0; j_k < kernel_size; j_k = j_k + 1) begin
+                    kernel[kernel_size - i_k - 1][kernel_size - j_k - 1] <= j_k + (i_k * kernel_size);
+                end
+            end
+        end
+    endtask
+
+    task set_buffer_flits(input logic is_upper_flit, input logic is_last_flit = 1'b0);
+        begin
+            if (is_upper_flit) begin
+                flit_buffer[(2 * data_width) - 1:data_width] <= feature_map[v_off][h_off];
+                set_last_flit(is_last_flit);
+            end else begin
+                flit_buffer[data_width - 1:0] <= feature_map[v_off][h_off];
+            end
+            set_enable_send(is_upper_flit || is_last_flit);
+        end
+    endtask
+
+    task send_last_flit();
+        logic is_upper_flit = is_even(dest_height) || is_even (dest_width);
+        begin
+            set_buffer_flits(is_upper_flit, 1'b1);
+            state <= DONE;
+        end
+    endtask
+
+    task convolve_current_pixel();
+        for (genvar i = 0; i < kernel_size; i++) begin
+            for (genvar j = 0; j < kernel_size; j++) begin
+                feature_map[v_off][h_off] += kernel[i][j] * source_img[v_off + i][h_off + j];
+            end
+        end
+    endtask
+
+    task send_current_pixel();
+        logic is_last_flit = 1'b0;
+        begin
+            if (h_off == dest_width - 1) begin
+                if (v_off == dest_height - 1) begin
+                    send_last_flit();
+                    is_last_flit = 1'b1;
+                end else begin
+                    {h_off, v_off} <= {4'b0, v_off + 1};
+                end
+            end
+            else begin
+                h_off <= h_off + 1;
+            end
+            
+            if (!is_last_flit) begin 
+                set_buffer_flits(/* upper_bits = */ (parity != 0), /* last = */ 1'b0);
+            end
+            toggle_parity();
+        end
+    endtask
+
+    task toggle_parity();
+        parity ^= 1'b1;
+    endtask
+
 endmodule

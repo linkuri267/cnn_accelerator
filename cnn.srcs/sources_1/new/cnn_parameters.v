@@ -1,6 +1,7 @@
 
 
 `define DATA_WIDTH 32
+`define BUFFER_WIDTH ((2 * DATA_WIDTH) + 1 + 2 + 1 + 1)
 `define KERNEL_SIZE 3
 `define SOURCE_SIZE 99
 //`define DESTINATION_SIZE `SOURCE_SIZE-`KERNEL_SIZE+1
