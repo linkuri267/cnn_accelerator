@@ -4,34 +4,42 @@
 #include <stdio.h>
 #include <vector>
 
-struct image
+// Used strictly for polymorphic purposes
+struct NeuralNetObj
 {
-  std::vector< std::vector<int> > *mImage;
+  std::vector< std::vector<int> > *mGrid;
 };
 
-struct kernel
+struct image : NeuralNetObj
 {
-  std::vector< std::vector<int> > *mKernel;
+  //std::vector< std::vector<int> > *mImage;
 };
 
-struct node
+struct kernel : NeuralNetObj
 {
-  std::vector< std::vector<int> > *mNode;
+  //std::vector< std::vector<int> > *mKernel;
+};
+
+struct node : NeuralNetObj
+{
+  //std::vector< std::vector<int> > *mNode;
 };
 
 
 // Needs to convolve 99x99 image and 3x3 kernel
 void convolveImage( const struct image& image, const struct kernel& kernel);
 
-void originalConvolution( const struct image& image, const struct kernel& kernel, struct node& activatedNode );
+struct NeuralNetObj originalConvolution( const struct image& image, const struct kernel& kernel );
 
-void relu( const struct image& image, const struct kernel &kernel, struct node& activatedNode );
+struct NeuralNetObj relu( const struct NeuralNetObj& nno );
 
-void maxPool( const struct image& image, const struct kernel& kernel, struct node& activatedNode );
+struct NeuralNetObj maxPool( const struct NeuralNetObj& nno );
+
+void outputShit(const struct NeuralNetObj &nno, const std::string &filename, bool csv_flag = true);
 
 void printShit(const struct node &node);
 
-void initImage(const struct image& image);
+void initImage(const struct image& image, int size);
 
 void initKernel(const struct kernel& kernel);
 
