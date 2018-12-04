@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <vector>
+#include <string>
 
 // Used strictly for polymorphic purposes
 struct NeuralNetObj

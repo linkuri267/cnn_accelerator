@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<webTalkData  fileName='usage_statistics_ext_xsim.xml'  majorVersion='1' minorVersion='0' timeStamp='Fri Nov 30 15:59:29 2018'>
+<webTalkData  fileName='usage_statistics_ext_xsim.xml'  majorVersion='1' minorVersion='0' timeStamp='Mon Dec  3 18:48:23 2018'>
 <section name="__ROOT__" level="0" order="1" description="">
  <section name="software_version_and_target_device" level="1" order="1" description="">
   <keyValuePair key="beta" value="FALSE" description="" />
   <keyValuePair key="build_version" value="2258646" description="" />
-  <keyValuePair key="date_generated" value="Fri Nov 30 15:59:28 2018" description="" />
+  <keyValuePair key="date_generated" value="Mon Dec  3 18:48:22 2018" description="" />
   <keyValuePair key="os_platform" value="LIN64" description="" />
   <keyValuePair key="product_version" value="XSIM v2018.2 (64-bit)" description="" />
   <keyValuePair key="project_id" value="74d96538fcc34a769a4d210eceedae6b" description="" />
-  <keyValuePair key="project_iteration" value="2" description="" />
+  <keyValuePair key="project_iteration" value="13" description="" />
   <keyValuePair key="random_id" value="94345d9be63e57af92027842ce62833f" description="" />
   <keyValuePair key="registration_id" value="94345d9be63e57af92027842ce62833f" description="" />
   <keyValuePair key="route_design" value="FALSE" description="" />
@@ -20,7 +20,7 @@
  </section>
  <section name="user_environment" level="1" order="2" description="">
   <keyValuePair key="cpu_name" value="Intel(R) Core(TM) i5-6200U CPU @ 2.30GHz" description="" />
-  <keyValuePair key="cpu_speed" value="2715.012 MHz" description="" />
+  <keyValuePair key="cpu_speed" value="2755.940 MHz" description="" />
   <keyValuePair key="os_name" value="Ubuntu" description="" />
   <keyValuePair key="os_release" value="Ubuntu 18.04.1 LTS" description="" />
   <keyValuePair key="system_ram" value="8.000 GB" description="" />
@@ -36,7 +36,7 @@
    <keyValuePair key="iteration" value="0" description="" />
    <keyValuePair key="runtime" value="215 ns" description="" />
    <keyValuePair key="simulation_memory" value="134704_KB" description="" />
-   <keyValuePair key="simulation_time" value="0.07_sec" description="" />
+   <keyValuePair key="simulation_time" value="0.09_sec" description="" />
    <keyValuePair key="trace_waveform" value="true" description="" />
   </section>
  </section>

@@ -10,7 +10,7 @@ int main(int argc, const char * argv[]) {
   testImage.mGrid = new std::vector< std::vector<int> >;
   testKernel.mGrid = new std::vector< std::vector<int> >;
   
-  initImage(testImage, 12);
+  initImage(testImage, 99);
   initKernel(testKernel);
   
   convolveImage(testImage, testKernel);

@@ -36,6 +36,9 @@ void initImage(const struct image& image, int size)
   image.mGrid->resize(size);
   
   // 0-98
+
+  std::fstream verilogTestFile;
+  verilogTestFile.open("source.mem", std::ios::out);
   
   int number = 0;
   int imageRowSize = static_cast<int>(image.mGrid->size());
@@ -45,6 +48,7 @@ void initImage(const struct image& image, int size)
     {
       number = (rand() % 256) - 128;
       image.mGrid->at(i).push_back(number);
+      verilogTestFile << std::hex << number << " ";
     }
     // Incremental if needed
     /*for(int j = 0; j < imageRowSize; ++j)
@@ -53,7 +57,7 @@ void initImage(const struct image& image, int size)
     }*/
   }
   
-  outputShit(image, "source.mem", false);
+  //outputShit(image, "source.mem", false);
 }
 
 void initKernel(const struct kernel& kernel)
@@ -241,7 +245,7 @@ void outputShit(const struct NeuralNetObj &nno, const std::string &filename, boo
         {
             softwareOuput << nno.mGrid->at(i)[j];
             
-            if( (csv_flag) && (j != y_length - 1) )
+            if(csv_flag)
             {
                 softwareOuput << ",";
             }

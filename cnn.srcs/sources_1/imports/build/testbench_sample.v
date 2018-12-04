@@ -124,7 +124,7 @@ module CONNECT_testbench_sample();
     
 	  start_conv0 = 1'b1;
 	  
-	  #(ClkPeriod);
+	  #(10*ClkPeriod);
 	
     end
   
