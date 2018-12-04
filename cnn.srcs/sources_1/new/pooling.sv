@@ -36,7 +36,7 @@ module pooling #(
     parameter kernel_size   = `KERNEL_SIZE,
     parameter pool_factor   = `POOLING_FACTOR,
     parameter buffer_size   = (2 * $size(T)) + 5,
-    localparam pooled_height = (dest_height / pool_factor) + ((dest_height % pool_factor) != 0).
+    localparam pooled_height = (dest_height / pool_factor) + ((dest_height % pool_factor) != 0),
     localparam pooled_width  = (dest_width  / pool_factor) + ((dest_width  % pool_factor) != 0)
 ) (
     input clk,
