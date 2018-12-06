@@ -32,89 +32,104 @@ module relu#(
 )(
     input clk,
     input reset,
-    input [buffer_size:0] data_in,
-    output [buffer_size:0] send_data,
-    output send_data_en
+    input [buffer_size-1:0] data_in,
+    output [buffer_size-1:0] send_data,
+    output reg send_data_en
 );
-    
-    reg send_data_en_reg;
-    reg [buffer_size:0] send_data_reg;
-    wire signed [data_width-1:0] data_in1_signed;
-    wire signed [data_width-1:0] data_in2_signed;
+    reg [buffer_size-1:0] output_flit_buffer;
     
     //1 bit isValid + 1 bit isTail + 2 bit destination + 1 bit VC + 64 bit data = 69 bit packet = 68:0
     
-    assign send_data = send_data_reg;
-    assign send_data_en = send_data_en_reg;
+    assign send_data = output_flit_buffer;
     
-    assign data_in1_signed = data_in[data_width-1:0];
-    assign data_in2_signed = data_in[ (2*data_width)-1 : data_width];
+    assign T lower_flit_received = data_in[data_width-1:0];
+    assign T upper_flit_received = data_in[(2*data_width)-1: data_width];
+
+    assign logic flit_is_valid = data_in[buffer_size - 1];
+    assign logic at_last_flit  = data_in[buffer_size - 2];
     
     always @(posedge clk, posedge reset) begin
-        if(reset) begin
-            send_data_en_reg <= 1'b0;
-            send_data_reg <= 69'd0;
+        if (reset) begin
+            do_reset();
         end
         else begin
-        
-            //if valid
-            if(data_in[68] == 1'b1) begin
-
-                //if not last piece of data
-                //in 99x99, last piece of data will only contain 1 number (data_in[31:0])
-                if(data_in[67] == 1'b0) begin
-
-                   //if data1 is < 0, set output1 to 0
-                   if(data_in1_signed < 0) begin
-                    send_data_reg[data_width-1:0] <= 32'd0;
-                   end 
-                   else begin
-                    send_data_reg[data_width-1:0] <= data_in1_signed;
-                   end
-
-                   //if data2 is < 0, set output2 to 0
-                   if(data_in2_signed < 0) begin
-                    send_data_reg[(2*data_width)-1:data_width] <= 32'd0;
-                   end
-                   else begin
-                    send_data_reg[(2*data_width)-1:data_width] <= data_in2_signed;
-                   end
-
-                   //set tail to 0
-                   send_data_reg[67] <= 1'b0;
-                end
-                else begin
-                    if(data_in1_signed < 0) begin
-                        send_data_reg[data_width-1:0] <= 32'd0;
-                    end
-                    else begin
-                        send_data_reg[data_width-1:0] <= data_in1_signed;
-                    end
-
-                    send_data_reg[63:32] <= 32'd0;
-
-                    //set tail to 1
-                    send_data_reg[67] <= 1'b1;
-                end
-
-                //set valid to 1
-                send_data_reg[68] <= 1'b1;
-
-                //set destination to R1 (pooling layer)
-                send_data_reg[66:65] <= 2'd1;
-
-                //set virtual channel to 0
-                send_data_reg[64] <= 1'b0;
-
-                //set en reg to 1, will send on next clock
-                send_data_en_reg <= 1'b1;
-            end
-            else begin
-                send_data_en_reg <= 1'b0;
-            end
+            perform_relu();  
         end 
     end
-    
-    
-    
+
+    task do_reset();
+    begin 
+        set_enable_send(1'b0);
+        clear_flit_buffer();
+    end
+    endtask
+
+    task perform_relu();
+    begin
+        if (flit_is_valid) begin
+            set_last_flit(at_last_flit);
+            propagate_appropriate_flits();
+        end
+        set_enable_send(flit_is_valid);
+    end
+    endtask
+
+    task propagate_appropriate_flits();
+        localparam R1_pooling_layer = 2'd1;
+        begin
+            propagate_lower_flit();
+            if (!at_odd_flit) begin
+                propagate_upper_flit();
+            end
+            else begin
+                clear_upper_flit();
+            end
+            set_valid(1'b1);
+            set_destination(R1_pooling_layer);
+            set_virtual_channel(1'b0);
+        end
+    endtask
+
+    task propagate_upper_flit();
+        output_flit_buffer[(2 * data_width) - 1:data_width]
+            <= max(32'd0, upper_flit_received);
+    endtask
+
+    task propagate_lower_flit();
+        output_flit_buffer[data_width - 1:0]
+            <= max(32'd0, lower_flit_received);
+    endtask
+
+    task set_done (input logic is_done);
+        done <= is_done;
+    endtask
+
+    task set_valid (input logic is_valid);
+        output_flit_buffer[buffer_size - 1] <= is_valid;
+    endtask
+
+    task set_last_flit(input logic is_last);
+        output_flit_buffer[buffer_size - 2] <= is_last;
+    endtask
+
+    task set_destination(input logic dest[1:0]);
+        flit_buffer[buffer_size - 3:buffer_size - 4] <= dest;
+    endtask
+
+    task set_virtual_channel(input logic bit_val);
+        output_flit_buffer[buffer_size - 5] <= bit_val;
+    endtask
+
+    task set_enable_send(input logic should_enable);
+        send_data_en <= should_enable;
+    endtask
+
+    task clear_flit_buffer();
+        output_flit_buffer <= {buffer_size {1'd0}};
+    endtask
+
+    task clear_upper_flit();
+        output_flit_buffer[(2 * data_width) - 1:data_width] <= {data_width {1'd0}};
+    endtask
+
 endmodule
